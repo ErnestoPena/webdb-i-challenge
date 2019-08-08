@@ -4,15 +4,15 @@ const accountRouter = express.Router();
 
 
 //Method to obtain all accounts
-accountRouter.get('/' , async (req,res) => {
-    try {
-        const getAll = await db('accounts');
-        res.status(200).json(getAll);
-    }
-    catch (err) {
-        res.status(500).json({message: 'There was a problem with the request'});
-    }
-})
+// accountRouter.get('/' , async (req,res) => {
+//     try {
+//         const getAll = await db('accounts');
+//         res.status(200).json(getAll);
+//     }
+//     catch (err) {
+//         res.status(500).json({message: 'There was a problem with the request'});
+//     }
+// })
 
 //Method to obtain a single account
 accountRouter.get('/:id' , async (req,res) =>{
@@ -68,8 +68,18 @@ accountRouter.delete('/:id' , async (req , res) => {
 
 //Stretch problem
 accountRouter.get('/' , async (req , res) => {
-    const querystring = {
-        
+    const sortField = req.query.sortby || id;
+    const limitField = req.query.limit || ALL;
+    const sortDir = req.query.sortdir || asc ;
+
+    try {
+         console.log(sortDir , limitField , sortField)
+        const queryresult = await db('accounts').orderBy(sortField , sortDir).limit(limitField)
+        console.log(queryresult)
+        res.status(200).json(queryresult)
+    }
+    catch (err) {
+        res.status(500).json({message: 'There was a problem with your request'})
     }
 })
 
